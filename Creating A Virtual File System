@@ -1,0 +1,159 @@
+class node:
+    def __init__(self, name, type = "dir", data = None):
+        self.name = name
+        self.type = type
+        self.data = data
+        self.parent = None
+        
+        self.child = []
+class vfs:
+    def __init__(self):
+        self.root=None
+        self.currdir=None
+        self.con={}
+    def mkdir(self,name):
+        
+        if self.root==None:
+            newd=node(name)
+            self.root=newd
+            self.default=newd
+            self.currdir=newd
+            return newd
+        else:
+            newd=node(name)
+            self.currdir.child.append(newd)
+            
+    def ls(self):
+        if  self.currdir!=None:
+            print('-d',self.currdir.name)
+        if self.currdir.child!=None:
+            for i in self.currdir.child:
+                if '.py' and '.txt'in i.name:
+                    print('-f',i.name)
+                else:
+                    print('-d',i.name)
+                
+            
+            
+    def createfile(self,data):
+        newd=node(data)
+        self.currdir.child.append(newd)
+    def write_content(self,filename):
+        con={}
+        for file in self.currdir.child:
+            if filename in file.name:
+                con[filename]=str(input('enter content: '))
+                self.con=con
+                return self.con
+    def read_content(self,filename):
+        if filename in self.con:
+            print (self.con[filename])
+        else:
+            print('NO such file')
+    def cd(self,name):
+        for i in self.currdir.child:
+            if name in i.name:
+                self.root=i
+                self.currdir=i
+                
+        if name=='cd.':
+            self.root=self.default
+            self.currdir=self.default
+                
+                
+    def pwd(self):
+        for i in self.currdir.child:
+            print(i.name,end='/')
+    def rm(self,name):
+        for i in self.currdir.child:
+            if name in i.name:
+                self.currdir.child.remove(i)
+                return
+            
+    def cp(self,filename):
+        for i in self.currdir.child:
+            if filename in i.name:
+                copy=i
+                
+                paste=str(input('enter paste location: '))
+                for c in self.currdir.child:
+                    if paste in c.name:
+                        vfs.cd(self,paste)
+                        self.currdir.child.append(copy)
+    def mv(self,filename):
+        for i in self.currdir.child:
+            if filename in i.name:
+                move=i
+                self.currdir.child.remove(i)
+                paste=str(input('enter paste location: '))
+                for c in self.currdir.child:
+                    if paste in c.name:
+                        vfs.cd(self,paste)
+                        self.currdir.child.append(move)
+    def find(self,name):
+        count=0
+        l1=[]
+        self.root=self.default
+        self.currdir=self.default
+        for i in self.currdir.child:
+            l1.append(i.name)
+        for k in l1:
+            if name in k:
+                count=count+1
+        print('There are',count,'finds.')
+        
+        
+                
+        
+    
+
+        
+        
+           
+    
+
+v = vfs()
+print("\nWelcome to Virtual File System")
+print("\nname:~$")
+command = str(input("\nEnter a command: "))
+
+while command != "exit":
+    if command == "mkdir":
+        name = str(input("Enter the name for the directory: "))
+        v.mkdir(name)
+
+    elif command == "ls":
+        v.ls()
+
+    elif command == "touch":
+        data=str(input('Filename'))
+        v.createfile(data)
+    elif command == "write":
+        f=str(input('filename: '))
+        v.write_content(f)
+    elif command == "cat":
+        f=str(input('filename: '))
+        v.read_content(f)
+    elif command == "cd":
+        f=str(input('cd: '))
+        v.cd(f)
+    elif command == "rm":
+        f=str(input('name: '))
+        v.rm(f)
+    elif command == "pwd":
+        v.pwd()
+    elif command == "cp":
+        name=str(input('enter filename:'))
+        v.cp(name)
+    elif command == "mv":
+        name=str(input('enter filename: '))
+        v.mv(name)
+    elif command == "find":
+        name=str(input('search file: '))
+        v.find(name)
+    else:
+        print("\nERROR: Wrong Command, Please Re-enter a command.")
+    command = str(input("\nEnter a command: "))
+
+
+    
