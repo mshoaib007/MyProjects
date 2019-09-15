@@ -1,0 +1,256 @@
+class node:
+    def __init__(self,data):
+        self.info=data
+        self.prev=None
+        self.next=None
+class dll:
+    def __init__(self):
+        self.start=None
+        self.count=0
+        self.cursor=None
+    def display_list(self):
+        if self.start is None:
+            print('l is empty')
+            return
+        print('l is : ')
+        p=self.start
+        while p is not None:
+            print(p.info,' ',end='')
+            p=p.next
+        print()
+    
+    def insert_at_beginning(self,data):
+        temp=node(data)
+        temp.next=self.start
+        self.start.prev=temp
+        self.start=temp
+        self.cursor=temp
+        self.count+=1
+    def insert_in_empty_list(self,data):
+        temp=node(data)
+        self.start=temp
+        self.cursor=temp
+        self.count+=1
+    def insert_at_end(self,data):
+        temp=node(data)
+        self.cursor=self.start
+        p=self.cursor
+        while p.next is not None:
+            p=p.next
+        p.next=temp
+        temp.prev=p
+        self.count+=1
+        
+    def create_list(self):
+        n=int(input('enter the number of nodes: '))
+        if n==0:
+            return
+        data=str(input('enter the next element: '))
+        self.insert_in_empty_list(data)
+        for i in range(n-1):
+            data=str(input('enter the next element: '))
+            self.insert_at_end(data)
+            
+            self.count+=1
+    def goto(self,row,col):
+        self.curosr=self.start
+        for i in range(row,col):
+            self.cursor=self.cursor.next
+    def forward(self):
+        if self.start and self.cursor==None:
+            print('enter data first')
+        else:
+            if self.cursor.next==None:
+                self.cursor=self.cursor
+            else:    
+                self.cursor=self.cursor.next
+    def back(self):
+        if self.start and self.cursor==None:
+            print('enter data first')
+        else:
+            if self.cursor.prev==None:
+                self.cursor=self.cursor
+            else:
+                self.cursor=self.cursor.prev
+    
+    def insert(self,data):
+        newn=node(data)
+        if self.start==None:
+            self.start=newn
+            self.cursor=newn
+        else:
+            p=self.cursor
+            newn.prev=p
+            newn.next=p.next
+            if p.next!=None:
+                p.next.prev=newn
+            p.next=newn
+    def insert_after(self,data,x):
+        temp=node(data)
+        self.cursor=self.start
+        p=self.cursor
+        while p is not None:
+            if p.info==x:
+                break
+            p=p.next
+        if p is None:
+            print(x,'not present')
+        else:
+            temp.prev=p
+            temp.next=p.next
+            if p.next is not None:
+                p.next.prev=temp
+            p.next=temp
+            self.count+=1
+    def insert_before(self,data,x):
+        if self.start is None:
+            print('list is empty')
+            return
+        if self.start.info==x:
+            temp=node(data)
+            temp.next=self.start
+            self.start.prev=temp
+            self.start=temp
+            return
+        self.cursor=self.start
+        p=self.cursor
+        while p is not None:
+            if p.info==x:
+                break
+            p=p.next
+        if p is None:
+            print(x,'not present')
+        else:
+            temp=node(data)
+            temp.prev=p.prev
+            temp.next=p
+            p.prev.next=temp
+            p.prev=temp
+            self.count+=1
+    def pcursor(self):
+        print(self.cursor.info)
+    def delete_node(self,x):
+        if self.start is None:
+            return
+        if self.start.next is None:
+            if self.start.info==x:
+                self.start=None
+            else:
+                print(x,'not found')
+            return
+        if self.start.info==x:
+            self.start=self.start.next
+            self.start.prev=None
+            return
+        self.cursor=self.start
+        p=self.cursor.next
+        while p.next is not None:
+            if p.info==x:
+                break
+            p=p.next
+        if p.next is not None:
+            p.prev.next=p.next
+            p.next.prev=p.prev
+        else:
+            if p.info==x:
+                p.prev.next=None
+            else:
+                print(x,'not found')
+    def len_link(self):
+        temp=self.start
+        count=0
+        while(temp):
+            count+=1
+            temp=temp.next
+        return count
+    def len_node(self):
+        t=self.start
+        elist=[]
+        count=0
+        while t!=None:
+            elist.append(t.info)
+            t=t.next
+
+        return len(''.join(elist))
+    def save_file(self):
+        file=open('The_DLL_File_.txt','w+')
+        t=self.start
+        elist=[]
+        count=0
+        while t!=None:
+            elist.append(t.info)
+            t=t.next
+        for i in elist:
+            file.write(str(i))
+        file.close()
+    def load_file(self,file_name):
+        open(file_name,'r')
+                            
+list=dll()
+list.create_list()
+while True:
+    print('1, Display list')
+    print('2, Insert data using cursor pos')
+    print('3, Insert data in an empty lsit')
+    print('4, Insert data at beginning')
+    print('5, Insert data at end')
+    print('6, Insert data after specific location')
+    print('7, Insert data before specific')
+    print('8, Delete node')
+    print('9, Show length of nodes')
+    print('10, Forward cursor ??')
+    print('11, Back cursor???')
+    print('12, Goto ')
+    print('13, Show cursor position')
+    print('14, Count the total number of characters')
+    print('15, Save File ')
+    print('16, Load File')
+    print('17, Quit the program')
+    op=int(input('Enter choice '))
+    if op==1:
+        list.display_list()
+    elif op==2:
+        data=str(input('enter str: '))
+        list.insert(data)
+    elif op==3:
+        data=str(input('enter element to be insert: '))
+        list.insert_in_empty_list(data)
+    elif op==4:
+        data=str(input('enter element to be inserted'))
+        list.insert_at_beginning(data)
+    elif op==5:
+        data=str(input('to be inserted: '))
+        list.insert_at_end(data)
+    elif op==6:
+        data=str(input('to be inserted: '))
+        x=str(input('after node: '))
+        list.insert_after(data,x)
+    elif op==7:
+        data=str(input('to be inserted: '))
+        x=str(input('before node: '))
+        list.insert_before(data,x)
+    elif op==8:
+        data=str(input('enter the element you want to del: '))
+        list.delete_node(data)
+    elif op==9:
+        print(list.len_link())
+    elif op==10:
+        list.forward()
+    elif op==11:
+        list.back()
+    elif op==12:
+        row=int(input('enter row '))
+        col=int (input('enter column'))
+        list.goto(row,col)
+    elif op==13:
+        list.pcursor()
+    elif op==14:
+        print(list.len_node())
+    elif op==15:
+        list.save_file()
+    elif op==16:
+        file_name=str(input('Enter complete file location: '))
+        list.load_file(file_name)
+    elif op==17:
+        break
+    print()
