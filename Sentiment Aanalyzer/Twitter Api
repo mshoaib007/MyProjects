@@ -1,0 +1,29 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Sep  5 12:38:53 2020
+
+@author: M Shoaib
+"""
+import json
+from tweepy import Stream
+from tweepy import OAuthHandler
+from tweepy.streaming import StreamListener
+import neat as s
+ckey=''
+csecret=''
+atoken=''
+asecret=''
+class listner(StreamListener):
+    def on_data(self,data):
+        all_data=json.loads(data)
+        tweet=all_data["text"]
+        sentiment=s.sentiment(tweet)
+        print(tweet,sentiment)
+        return True
+    def on_error(self,status):
+        print(status)
+auth=OAuthHandler(ckey,csecret)
+auth.set_access_token(atoken,asecret)
+twitterStream=Stream(auth,listner())
+twitterStream.filter(track=['Imran Khan'])
+        
